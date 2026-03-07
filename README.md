@@ -9,8 +9,8 @@ This project was built as a **hackathon prototype** to demonstrate how AI can su
 
 ## Deployed link
 
-- deployed: <https://studysprint-api-bxbp.onrender.com>
-- open api docs: <https://studysprint-api-bxbp.onrender.com/docs>
+- deployed: <https://studysprint-api-f9jd.onrender.com>
+- open api docs: <https://studysprint-api-f9jd.onrender.com/docs/>
 
 ## 🚀 Core Idea
 
