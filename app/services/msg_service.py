@@ -51,7 +51,7 @@ class MsgService:
     
     def delete_msg(self, user_id: UUID, data: MsgDelete, db: Session) -> int:
         msg = self.msg_repo.get_msg(db, data.convo_id, data.msg_id)
-        if msg is None or msg.user_id != str(user_id):
+        if msg is None or msg.user_id != user_id:
             raise ValueError("Messege not found")
         
         return self.msg_repo.delete_msg(db, data.convo_id, msg)

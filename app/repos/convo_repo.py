@@ -12,10 +12,10 @@ class ConvoRepo:
         return convo
 
     def get_by_id(self, db: Session, convo_id: UUID) ->  Convo | None:
-        return db.query(Convo).filter(Convo.id == str(convo_id)).first()
+        return db.query(Convo).filter(Convo.id == convo_id).first()
 
     def get_by_user_id(self, db: Session, user_id: UUID) -> list[Convo]:
-        return db.query(Convo).filter(Convo.user_id == str(user_id)).all()
+        return db.query(Convo).filter(Convo.user_id == user_id).all()
 
     def save(self, db: Session, convo: Convo) -> Convo:
         db.commit()

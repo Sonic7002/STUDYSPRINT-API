@@ -18,7 +18,7 @@ class UserRepo:
             return None
 
     def get_by_id(self, db: Session, user_id: UUID) ->  User | None:
-        return db.query(User).filter(User.id == str(user_id)).first()
+        return db.query(User).filter(User.id == user_id).first()
 
     def get_by_email(self, db: Session, email: EmailStr) -> User | None:
         return db.query(User).filter(User.email == email).first()

@@ -1,15 +1,19 @@
-from uuid import uuid4
+from uuid import uuid4, UUID as PyUUID
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, DateTime, ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID
 from ..db.base import Base
 
 class Msg(Base):
     __tablename__ = "msgs"
 
-    id: Mapped[str] = mapped_column(String(36), primary_key = True, default = lambda: str(uuid4()))
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), nullable= False)
-    convo_id: Mapped[str] = mapped_column(ForeignKey("convos.id"), nullable=False)
+    id: Mapped[PyUUID] = mapped_column(UUID, primary_key = True, default=uuid4)
+    user_id: Mapped[PyUUID] = mapped_column(ForeignKey("users.id"), nullable= False)
+    convo_id: Mapped[PyUUID] = mapped_column(ForeignKey("convos.id"), nullable=False)
     role: Mapped[str] = mapped_column(String(20), nullable=False)
     content: Mapped[str] = mapped_column(String, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default = datetime.utcnow, nullable = False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    user = relationship("User")
+    convo = relationship("Convo")

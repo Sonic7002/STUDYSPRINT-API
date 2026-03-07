@@ -42,7 +42,7 @@ class FileService:
         if not doc:
             raise ValueError("file not found")
         
-        if doc.user_id != str(user_id):
+        if doc.user_id != user_id:
             raise ValueError("file not found")
         
         try:
@@ -66,7 +66,7 @@ class FileService:
         if not doc:
             raise ValueError("file not found")
         
-        if doc.user_id != str(user_id):
+        if doc.user_id != user_id:
             raise ValueError("file not found")
 
         storage_key = f"{doc.id}.pdf"

@@ -11,10 +11,10 @@ class FileRepo:
         return doc
 
     def get_by_id(self, db: Session, file_id: UUID) ->  File | None:
-        return db.query(File).filter(File.id == str(file_id)).first()
+        return db.query(File).filter(File.id == file_id).first()
 
     def get_by_user_id(self, db: Session, user_id: UUID) -> list[File]:
-        return db.query(File).filter(File.user_id == str(user_id)).all()
+        return db.query(File).filter(File.user_id == user_id).all()
     
     def save(self, db: Session, doc: File) -> File:
         db.commit()

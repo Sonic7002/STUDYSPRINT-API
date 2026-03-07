@@ -30,7 +30,7 @@ class ConvoService:
         if not convo:
             raise ValueError("Convo not found")
         
-        if convo.user_id != str(user_id):
+        if convo.user_id != user_id:
             raise ValueError("Convo not found")
         
         updates = data.model_dump(exclude_unset=True)
@@ -46,9 +46,10 @@ class ConvoService:
         if not convo:
             raise ValueError("Convo not found")
         
-        if convo.user_id != str(user_id):
+        if convo.user_id != user_id:
             raise ValueError("Convo not found")
         
+        self.msg_repo.delete_msg_by_convo(db, convo_id)        
         self.repo.delete(db, convo_id)
-        self.msg_repo.delete_msg_by_convo(db, convo_id)
+
         return convo

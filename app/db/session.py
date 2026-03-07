@@ -7,7 +7,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise RuntimeError("Fatal Eror! Database URL is missing.")
 
-engine = create_engine(DATABASE_URL, echo=False, future=True)
+engine = create_engine(DATABASE_URL,pool_pre_ping=True,pool_recycle=300, echo=False, future=True)
 # turn echo True when debugging SQL
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
