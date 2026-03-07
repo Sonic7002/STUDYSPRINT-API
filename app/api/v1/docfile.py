@@ -24,16 +24,16 @@ def get_all_files(current_user: User = Depends(get_current_user), service: FileS
     return service.get_files(current_user.id, db)
 
 @router.get("/{file_id}")
-def download_file(file_id: UUID, current_user: User = Depends(get_current_user), service: FileService = Depends(get_file_service), db: Session = Depends(get_db)):
+def get_file_url(file_id: UUID, current_user: User = Depends(get_current_user), service: FileService = Depends(get_file_service), db: Session = Depends(get_db)):
     try:
         return service.return_file(current_user.id, file_id, db)
-    except ValueError:
-        raise HTTPException(status_code=404, detail="File not found")
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @router.delete("/{file_id}", response_model=FileRead)
 def delete_file(file_id: UUID, current_user: User = Depends(get_current_user), service: FileService = Depends(get_file_service), db: Session = Depends(get_db)):
     try:
         doc = service.delete_file(current_user.id, file_id, db)
-    except ValueError:
-        raise HTTPException(status_code=404, detail="Invalid file ID")
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     return doc

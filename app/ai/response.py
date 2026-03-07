@@ -2,12 +2,14 @@ from google import genai
 from google.genai import types
 from ..models.msg import Msg
 from ..schemas.msg import MsgCreate, MsgRole
-from pathlib import Path
 from uuid import UUID
+from ..db.file_client import supabase
+import io
+import httpx
+
+client = genai.Client()
 
 def generate_response(msgs: list[Msg]) -> MsgCreate:
-    client = genai.Client()
-
     prompt = """You are an AI Study Assistant designed exclusively to help students with education and academic learning.
 
 Your responsibilities:
@@ -52,7 +54,6 @@ Keep explanations clear, structured, and educational. Prefer step-by-step explan
     return reply
 
 def generate_convo(data: str) -> str:
-    client = genai.Client()
     prompt = f"""You are generating a title for a chat conversation.
 
 Given the first message of the conversation, generate a short, clear, descriptive title.
@@ -71,12 +72,14 @@ First message:
     return(response.text)
 
 def generate_notes(file_id: UUID) -> MsgCreate:
-    client = genai.Client()
 
-    UPLOAD_DIR = Path("files")
-    file_path = UPLOAD_DIR / f"{file_id}.pdf"
+    storage_key = f"{file_id}.pdf"
+    file_url = supabase.storage.from_("studysprint").get_public_url(storage_key)
 
-    sample_file = client.files.upload(file=file_path)
+    # Retrieve and upload the PDF using the File API
+    doc_io = io.BytesIO(httpx.get(file_url).content)
+
+    doc = client.files.upload(file=doc_io, config=dict(mime_type='application/pdf'))
 
     prompt="""You are an AI Study Assistant that helps students convert study material into clear, structured, and detailed notes.
 
@@ -127,12 +130,11 @@ Title of the Topic
 The goal is to produce high-quality study notes that a student could use directly for revision or exam preparation.
 """
 
-    response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=[sample_file, prompt])
+    response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=[doc, prompt])
     reply = MsgCreate(role=MsgRole.MODEL, content=response.text)
     return reply
 
 def generate_locked_reply(msgs: list[Msg]) -> MsgCreate:
-    client = genai.Client()
 
     prompt = """You are an AI Study Assistant designed strictly for educational purposes.
 
@@ -187,12 +189,14 @@ Your goal is to maintain a focused, distraction-free learning environment and en
     return reply
 
 def generate_quiz(file_id: UUID) -> MsgCreate:
-    client = genai.Client()
 
-    UPLOAD_DIR = Path("files")
-    file_path = UPLOAD_DIR / f"{file_id}.pdf"
+    storage_key = f"{file_id}.pdf"
+    file_url = supabase.storage.from_("studysprint").get_public_url(storage_key)
 
-    sample_file = client.files.upload(file=file_path)
+    # Retrieve and upload the PDF using the File API
+    doc_io = io.BytesIO(httpx.get(file_url).content)
+
+    doc = client.files.upload(file=doc_io, config=dict(mime_type='application/pdf'))
 
     prompt="""You are an AI Study Assistant that helps students test their understanding of study material.
 
@@ -248,6 +252,6 @@ Ensure the quiz is suitable for testing a student's understanding and revision.
 
 """
 
-    response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=[sample_file, prompt])
+    response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=[doc, prompt])
     reply = MsgCreate(role=MsgRole.MODEL, content=response.text)
     return reply
