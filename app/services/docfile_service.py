@@ -2,7 +2,6 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from ..models.docfile import File
 from ..repos.docfile_repo import FileRepo
-from ..schemas.docfile import FileRead
 from shutil import copyfileobj
 from pathlib import Path
 from fastapi import UploadFile
@@ -74,3 +73,4 @@ class FileService:
 
         self.repo.delete(db, file_id)
         return doc
+        

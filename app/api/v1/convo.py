@@ -14,6 +14,10 @@ router = APIRouter(prefix="/convos", tags=["convos"])
 def create_convo(data: ConvoCreate, current_user: User = Depends(get_current_user), service: ConvoService = Depends(get_convo_service), db: Session = Depends(get_db)):
     return service.create_convo(current_user.id, data, db)
 
+@router.post("/custom", response_model=ConvoRead)
+def create_custom_convo(data: ConvoCreate, current_user: User = Depends(get_current_user), service: ConvoService = Depends(get_convo_service), db: Session = Depends(get_db)):
+    return service.create_custom_convo(current_user.id, data, db)
+
 @router.get("/", response_model=list[ConvoRead])
 def get_all_convos(current_user: User = Depends(get_current_user), service: ConvoService = Depends(get_convo_service), db: Session = Depends(get_db)):
     return service.get_convos(current_user.id, db)

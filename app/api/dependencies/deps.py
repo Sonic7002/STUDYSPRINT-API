@@ -18,7 +18,7 @@ def get_convo_service() -> ConvoService:
     return ConvoService(convo_repo, msg_repo)
 
 def get_msg_service() -> MsgService:
-    return MsgService(msg_repo, convo_repo)
+    return MsgService(msg_repo, convo_repo, file_repo)
 
 def get_file_service() -> FileService:
     return FileService(file_repo)

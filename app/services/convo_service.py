@@ -14,6 +14,9 @@ class ConvoService:
     def create_convo(self, user_id: UUID, data: ConvoCreate, db: Session) -> Convo:
         name = generate_convo(data.data)
         return self.repo.create(db, user_id, name)
+    
+    def create_custom_convo(self, user_id: UUID, data: ConvoCreate, db: Session) -> Convo:
+        return self.repo.create(db, user_id, data.data)
 
     def get_convo(self, convo_id: UUID, db: Session) -> Convo | None:
         return self.repo.get_by_id(db, convo_id)

@@ -31,7 +31,7 @@ def download_file(file_id: UUID, current_user: User = Depends(get_current_user),
         raise HTTPException(status_code=404, detail="File not found")
 
 @router.delete("/{file_id}", response_model=FileRead)
-def delete_convo(file_id: UUID, current_user: User = Depends(get_current_user), service: FileService = Depends(get_file_service), db: Session = Depends(get_db)):
+def delete_file(file_id: UUID, current_user: User = Depends(get_current_user), service: FileService = Depends(get_file_service), db: Session = Depends(get_db)):
     try:
         doc = service.delete_file(current_user.id, file_id, db)
     except ValueError:
