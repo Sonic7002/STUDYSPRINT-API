@@ -25,7 +25,8 @@ class FileService:
             doc = self.repo.create(db, user_id, data.filename)
             try:
                 storage_key = f"{doc.id}.pdf"
-                supabase.storage.from_("studysprint").upload(storage_key, data.file, {"content-type": "application/pdf"})
+                file_bytes = data.file.read()
+                supabase.storage.from_("studysprint").upload(storage_key, file_bytes, {"content-type": "application/pdf"})
             except Exception as e:
                 raise ValueError(str(e))
         except Exception as e:
@@ -69,7 +70,7 @@ class FileService:
             raise ValueError("file not found")
 
         storage_key = f"{doc.id}.pdf"
-        supabase.storage.from_("bucket_name").remove([storage_key])
+        supabase.storage.from_("studysprint").remove([storage_key])
 
         self.repo.delete(db, file_id)
         return doc

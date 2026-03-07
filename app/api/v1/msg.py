@@ -13,19 +13,31 @@ router = APIRouter(prefix="/msgs", tags=["msgs"])
 
 @router.post("/focus/{convo_id}", response_model=MsgRead)
 def create_focused_msg(data: MsgCreate, convo_id: UUID, current_user: User = Depends(get_current_user), service: MsgService = Depends(get_msg_service), db: Session = Depends(get_db)):
-    return service.create_locked_msg(current_user.id, convo_id, data, db)
+    try:
+        return service.create_locked_msg(current_user.id, convo_id, data, db)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/notes")
 def generate_notes(data: FileGen, current_user: User = Depends(get_current_user), service: MsgService = Depends(get_msg_service), db: Session = Depends(get_db)):
-    return service.create_notes(current_user.id, data.convo_id, data.file_id, db)
+    try:
+        return service.create_notes(current_user.id, data.convo_id, data.file_id, db)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/quiz")
 def generate_quiz(data: FileGen, current_user: User = Depends(get_current_user), service: MsgService = Depends(get_msg_service), db: Session = Depends(get_db)):
-    return service.create_quiz(current_user.id, data.convo_id, data.file_id, db)
+    try:
+        return service.create_quiz(current_user.id, data.convo_id, data.file_id, db)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/{convo_id}", response_model=MsgRead)
 def create_msg(data: MsgCreate, convo_id: UUID, current_user: User = Depends(get_current_user), service: MsgService = Depends(get_msg_service), db: Session = Depends(get_db)):
-    return service.create_msg(current_user.id, convo_id, data, db)
+    try:
+        return service.create_msg(current_user.id, convo_id, data, db)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/", response_model=list[MsgRead])
 def get_all_msgs(convo_id: UUID, current_user: User = Depends(get_current_user), service: MsgService = Depends(get_msg_service), db: Session = Depends(get_db)):
